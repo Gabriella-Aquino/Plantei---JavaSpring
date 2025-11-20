@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: plantei_db
+    environment:
+      POSTGRES_DB: plantei_db
+      POSTGRES_USER: plantei_admin
+      POSTGRES_PASSWORD: mysecret
+    ports:
+      - "5432:5432"
