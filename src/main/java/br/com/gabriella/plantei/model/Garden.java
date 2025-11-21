@@ -30,6 +30,6 @@ public class Garden {
   private User admin;
 
   @CreationTimestamp 
-  @Column(updatable = false)
+  @Column(name = "created_at" ,updatable = false)
   private LocalDateTime createdAt;
 }

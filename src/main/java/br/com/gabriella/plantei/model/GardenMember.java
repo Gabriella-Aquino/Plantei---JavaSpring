@@ -2,6 +2,8 @@ package br.com.gabriella.plantei.model;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class GardenMember {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @Column(name = "entry_date")
+  @CreationTimestamp 
+  @Column(name = "entry_date", updatable = false)
   private LocalDate entryDate;
 }
