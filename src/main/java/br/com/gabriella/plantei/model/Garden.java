@@ -23,6 +23,8 @@ public class Garden {
   @Column(name = "garden_id")
   private Long id;
 
+  private String name;
+
   @ManyToOne
   @JoinColumn(name = "admin_user_id")
   private User admin;
