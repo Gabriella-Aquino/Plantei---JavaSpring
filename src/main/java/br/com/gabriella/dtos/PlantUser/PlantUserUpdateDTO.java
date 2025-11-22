@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlantUserUpdateDTO {
   private String nickname;
-    private Long plantId;
-    private Long userId;
-    private Long gardenId;
-    private LocalDate acquisitionDate;
+  private Long gardenId;
+  private LocalDate acquisitionDate;
 }
