@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.PlantUser;
+package br.com.gabriella.plantei.dtos.PlantUser;
 
 import java.time.LocalDate;
 

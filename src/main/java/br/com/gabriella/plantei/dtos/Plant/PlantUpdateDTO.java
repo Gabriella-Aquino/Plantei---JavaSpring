@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.Plant;
+package br.com.gabriella.plantei.dtos.Plant;
 
 import br.com.gabriella.validation.OptionalNotBlank;
 import jakarta.validation.constraints.NotNull;

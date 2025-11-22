@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.GardenMember;
+package br.com.gabriella.plantei.dtos.GardenMember;
 
 import java.time.LocalDate;
 

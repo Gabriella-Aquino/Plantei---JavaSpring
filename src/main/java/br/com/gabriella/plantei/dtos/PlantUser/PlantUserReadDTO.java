@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.GardenMember;
+package br.com.gabriella.plantei.dtos.PlantUser;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GardenMemberReadDTO {
+public class PlantUserReadDTO {
   private Long id;
-  private Long gardenId;
+  private String nickname;
+  private Long plantId;
   private Long userId;
-  private LocalDate entryDate;
+  private Long gardenId;
+  private LocalDate acquisitionDate;
 }

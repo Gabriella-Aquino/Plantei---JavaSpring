@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.Garden;
+package br.com.gabriella.plantei.dtos.Garden;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

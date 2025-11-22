@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.User;
+package br.com.gabriella.plantei.dtos.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;

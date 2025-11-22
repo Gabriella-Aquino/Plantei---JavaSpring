@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.Plant;
+package br.com.gabriella.plantei.dtos.Plant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

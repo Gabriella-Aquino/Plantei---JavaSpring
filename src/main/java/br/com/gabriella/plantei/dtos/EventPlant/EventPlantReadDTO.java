@@ -1,4 +1,4 @@
-package br.com.gabriella.dtos.EventPlant;
+package br.com.gabriella.plantei.dtos.EventPlant;
 
 import java.time.LocalDateTime;
 import br.com.gabriella.plantei.model.enums.EventType;
