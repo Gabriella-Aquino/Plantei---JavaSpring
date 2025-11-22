@@ -1,5 +1,6 @@
 package br.com.gabriella.dtos.Plant;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlantCreateDTO {
-  private String name;
-  private String scientificName;
-  private String type;
-  private String description;
-  private String watering;
-  private String fertilizing;
-  private String climate;
-  private String pests;
-  private boolean toxic;
+  @NotBlank private String scientificName;
+  @NotBlank private String name;
+  @NotBlank private String type;
+  @NotBlank private String description;
+  @NotBlank private String watering;
+  @NotBlank private String fertilizing;
+  @NotBlank private String climate;
+  @NotBlank private String pests;
+  @NotBlank private boolean toxic;
 }
