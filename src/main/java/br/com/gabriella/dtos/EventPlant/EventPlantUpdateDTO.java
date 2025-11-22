@@ -3,6 +3,7 @@ package br.com.gabriella.dtos.EventPlant;
 import java.time.LocalDateTime;
 
 import br.com.gabriella.plantei.model.enums.EventType;
+import br.com.gabriella.validation.OptionalNotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventPlantUpdateDTO {
-  private Long plantUserId;
-  private Long userId;
-  private EventType type;
+  @OptionalNotBlank private Long plantUserId;
+  @OptionalNotBlank private EventType type;
   private String description;
-  private LocalDateTime eventDate;
+  @OptionalNotBlank private LocalDateTime eventDate;
 }

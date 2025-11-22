@@ -1,5 +1,6 @@
 package br.com.gabriella.dtos.Garden;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GardenCreateDTO {
-  private Long adminId;
-  private String name;
+  @NotBlank private Long adminId;
+  @NotBlank private String name;
 }

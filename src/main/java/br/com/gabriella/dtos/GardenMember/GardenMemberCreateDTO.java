@@ -1,6 +1,8 @@
 package br.com.gabriella.dtos.GardenMember;
 
 import java.time.LocalDate;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GardenMemberCreateDTO {
+  @NotBlank
   private Long gardenId;
+  @NotBlank
   private Long userId;
   private LocalDate entryDate;
 }
