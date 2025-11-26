@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GrardenUpdateDTO {
+public class GardenUpdateDTO {
     @OptionalNotBlank private String name;
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import br.com.gabriella.plantei.model.enums.EventType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventPlantCreateDTO {
-  @NotBlank private Long plantUserId;
-  @NotBlank private Long userId;
-  @NotBlank private EventType type;
+  @NotNull
+  private Long plantUserId;
+  @NotNull
+  private Long userId;
+  @NotNull
+  private EventType type;
   private String description;
-  @NotBlank private LocalDateTime eventDate;
+  @NotNull
+  private LocalDateTime eventDate;
 }

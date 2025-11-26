@@ -10,10 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import br.com.gabriella.plantei.model.EventPlant;
 
 @Entity
 @Data
@@ -28,7 +26,7 @@ public class PlantUser {
 
   @ManyToOne
   @JoinColumn(name = "plant_id")
-  private Plant plant;  
+  private Plant plant; 
 
   @ManyToOne
   @JoinColumn(name = "user_id")
