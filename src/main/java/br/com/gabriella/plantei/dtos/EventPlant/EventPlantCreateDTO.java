@@ -3,7 +3,6 @@ package br.com.gabriella.plantei.dtos.EventPlant;
 import java.time.LocalDateTime;
 
 import br.com.gabriella.plantei.model.enums.EventType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -14,24 +14,24 @@ import br.com.gabriella.plantei.model.PlantUser;
 @Mapper(componentModel = "spring")
 public interface PlantUserMapper {
   // CREATE DTO → ENTITY
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "plant", source = "plantId")
-    @Mapping(target = "user", source = "userId")
-    @Mapping(target = "garden", source = "gardenId")
-    PlantUser toEntity(PlantUserCreateDTO dto);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "plant.id", source = "plantId")
+  @Mapping(target = "user.id", source = "userId")
+  @Mapping(target = "garden.id", source = "gardenId")
+  PlantUser toEntity(PlantUserCreateDTO dto);
 
-    // ENTITY → READ DTO
-    @Mapping(target = "plantId", source = "plant.id")
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "gardenId", source = "garden.id")
-    PlantUserReadDTO toReadDTO(PlantUser entity);
+  // ENTITY → READ DTO
+  @Mapping(target = "plantId", source = "plant.id")
+  @Mapping(target = "userId", source = "user.id")
+  @Mapping(target = "gardenId", source = "garden.id")
+  PlantUserReadDTO toReadDTO(PlantUser entity);
 
-    // UPDATE DTO → ENTITY (PATCH)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "plant", ignore = true)   // não pode alterar planta
-    @Mapping(target = "user", ignore = true)    // não pode alterar dono
-    @Mapping(target = "garden", source = "gardenId")
-    void updateEntityFromDTO(PlantUserUpdateDTO dto, @MappingTarget PlantUser entity);
+  // UPDATE DTO → ENTITY (PATCH)
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "plant", ignore = true) // não pode alterar planta
+  @Mapping(target = "user", ignore = true) // não pode alterar dono
+  @Mapping(target = "garden.id", source = "gardenId")
+  void updateEntityFromDTO(PlantUserUpdateDTO dto, @MappingTarget PlantUser entity);
 
 }

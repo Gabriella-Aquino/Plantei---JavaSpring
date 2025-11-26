@@ -8,13 +8,14 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PlantMapper {
   // CREATE DTO → ENTITY
   Plant toEntity(PlantCreateDTO dto);
 
-   // ENTITY → READ DTO
+  // ENTITY → READ DTO
   PlantReadDTO toReadDTO(Plant plant);
 
   // UPDATE DTO → ENTITY (PATCH)

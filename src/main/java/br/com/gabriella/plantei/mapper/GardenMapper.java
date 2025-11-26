@@ -16,7 +16,7 @@ public interface GardenMapper {
   // CREATE DTO → ENTITY
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
-  @Mapping(target = "admin", source = "adminId")
+  @Mapping(target = "admin.id", source = "adminId")
   Garden toEntity(GardenCreateDTO dto);
 
   // ENTITY → READ DTO
