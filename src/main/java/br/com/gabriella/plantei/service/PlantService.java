@@ -43,4 +43,11 @@ public class PlantService {
       Plant update =plantRepository.save(plant);
       return plantMapper.toReadDTO(update);
   }
+
+  public void delete(long id){
+      if(!plantRepository.existsById(id)){
+          throw new EntityNotFoundException("Plant não encontrada");
+      }
+      plantRepository.deleteById(id);
+  }
 }
