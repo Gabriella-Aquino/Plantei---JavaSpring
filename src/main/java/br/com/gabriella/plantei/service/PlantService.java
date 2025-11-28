@@ -32,7 +32,7 @@ public class PlantService {
       return plantMapper.toReadDTO(plant);
   }
 
-  public List<PlantReadDTO> listAllPlants(){
+  public List<PlantReadDTO> getAllPlants(){
       return plantRepository.findAll().stream().map(plantMapper::toReadDTO).toList();
   }
 
