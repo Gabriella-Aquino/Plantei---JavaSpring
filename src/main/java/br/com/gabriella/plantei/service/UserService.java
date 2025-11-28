@@ -8,6 +8,7 @@ import br.com.gabriella.plantei.model.User;
 import br.com.gabriella.plantei.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +22,13 @@ public class UserService {
     private UserMapper userMapper;
 
     public UserReadDTO creatUser (UserCreateDTO data){
-        User user = userMapper.toEntity(data);
-        userRepository.save(user);
-        return userMapper.toReadDTO(user);
+        try {
+            User user = userMapper.toEntity(data);
+            userRepository.save(user);
+            return userMapper.toReadDTO(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Username ou email já está sendo usado");
+        }
     }
 
     public UserReadDTO getUserById(long id){
@@ -36,10 +41,15 @@ public class UserService {
     }
 
     public UserReadDTO updateUser(Long id, UserUpdateDTO data){
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User não encontrado"));
-        userMapper.updateEntityFromDTO(data, user);
-        User update = userRepository.save(user);
-        return userMapper.toReadDTO(update);
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("User não encontrado"));
+            userMapper.updateEntityFromDTO(data, user);
+            User update = userRepository.save(user);
+            return userMapper.toReadDTO(update);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Username ou email já está sendo usado");
+        }
     }
 
     public void delete(long id){
