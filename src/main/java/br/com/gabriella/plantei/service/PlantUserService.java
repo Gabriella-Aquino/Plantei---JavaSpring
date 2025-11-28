@@ -35,6 +35,18 @@ public class PlantUserService {
         return plantUserRepository.findAll().stream().map(plantUserMapper::toReadDTO).toList();
     }
 
+    public List<PlantUserReadDTO> getAllPlantUserByUserId(Long userId) {
+        List<PlantUser> list = plantUserRepository.findByUserId(userId);
+
+        if (list.isEmpty()) {
+            throw new EntityNotFoundException("Nenhuma planta encontrada para este usuário");
+        }
+
+        return list.stream()
+                .map(plantUserMapper::toReadDTO)
+                .toList();
+    }
+
     public PlantUserReadDTO updatePlantUser(long id, PlantUserUpdateDTO data){
         PlantUser plantUser = plantUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("planta do usuário não encontrada"));
@@ -43,6 +55,13 @@ public class PlantUserService {
 
         plantUserRepository.save(plantUser);
         return plantUserMapper.toReadDTO(plantUser);
+    }
+
+    public void delete(long id){
+        if(!plantUserRepository.existsById(id)){
+            throw new EntityNotFoundException("Planta do usuario não encontrada");
+        }
+        plantUserRepository.deleteById(id);
     }
 
 }
