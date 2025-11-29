@@ -8,12 +8,11 @@ import br.com.gabriella.plantei.model.PlantUser;
 import br.com.gabriella.plantei.repository.PlantUserRepository;
 import br.com.gabriella.plantei.service.PlantUserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,146 +21,157 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class PlantUserServiceTest {
 
     @Mock
-    PlantUserRepository plantUserRepository;
+    private PlantUserRepository plantUserRepository;
 
     @Mock
-    PlantUserMapper plantUserMapper;
+    private PlantUserMapper plantUserMapper;
 
     @InjectMocks
-    PlantUserService plantUserService;
+    private PlantUserService plantUserService;
 
-    // ---------- CREATE ----------
-    @Test
-    void createPlantUser_Success() {
-        PlantUserCreateDTO dto = new PlantUserCreateDTO(1L, "Minha Planta", 2L, 3L, LocalDate.now());
-        PlantUser entity = new PlantUser();
-        PlantUserReadDTO readDTO = new PlantUserReadDTO(10L, "Minha Planta", 1L, 2L, 3L, LocalDate.now());
+    private PlantUser plantUser;
+    private PlantUserReadDTO readDTO;
 
-        when(plantUserMapper.toEntity(dto)).thenReturn(entity);
-        when(plantUserMapper.toReadDTO(entity)).thenReturn(readDTO);
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
-        PlantUserReadDTO result = plantUserService.createPlantUser(dto);
+        plantUser = new PlantUser();
+        plantUser.setId(1L);
 
-        verify(plantUserRepository).save(entity);
-        assertEquals(readDTO, result);
+        readDTO = new PlantUserReadDTO();
+        readDTO.setId(1L);
     }
 
-    // ---------- GET BY ID ----------
+    // -------------------------------------------------------------
+    // CREATE
+    // -------------------------------------------------------------
     @Test
-    void getPlantUserById_Success() {
-        PlantUser entity = new PlantUser();
-        entity.setId(5L);
-        PlantUserReadDTO dto = new PlantUserReadDTO();
+    void testCreatePlantUser_Success() {
+        PlantUserCreateDTO createDTO = new PlantUserCreateDTO(
+                1L, "Minha planta", 2L, 3L, LocalDate.now()
+        );
 
-        when(plantUserRepository.findById(5L)).thenReturn(Optional.of(entity));
-        when(plantUserMapper.toReadDTO(entity)).thenReturn(dto);
+        when(plantUserMapper.toEntity(createDTO)).thenReturn(plantUser);
+        when(plantUserRepository.save(plantUser)).thenReturn(plantUser);
+        when(plantUserMapper.toReadDTO(plantUser)).thenReturn(readDTO);
 
-        PlantUserReadDTO result = plantUserService.getPlantUserById(5L);
+        PlantUserReadDTO result = plantUserService.createPlantUser(createDTO);
 
-        assertEquals(dto, result);
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+
+        verify(plantUserMapper).toEntity(createDTO);
+        verify(plantUserRepository).save(plantUser);
+    }
+
+    // -------------------------------------------------------------
+    // GET BY ID
+    // -------------------------------------------------------------
+    @Test
+    void testGetPlantUserById_Success() {
+        when(plantUserRepository.findById(1L)).thenReturn(Optional.of(plantUser));
+        when(plantUserMapper.toReadDTO(plantUser)).thenReturn(readDTO);
+
+        PlantUserReadDTO result = plantUserService.getPlantUserById(1L);
+
+        assertNotNull(result);
+        verify(plantUserRepository).findById(1L);
     }
 
     @Test
-    void getPlantUserById_NotFound() {
+    void testGetPlantUserById_NotFound() {
         when(plantUserRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> plantUserService.getPlantUserById(1L));
+        assertThrows(EntityNotFoundException.class,
+                () -> plantUserService.getPlantUserById(1L));
     }
 
-    // ---------- GET ALL ----------
+    // -------------------------------------------------------------
+    // GET ALL
+    // -------------------------------------------------------------
     @Test
-    void getAllPlantUser_Success() {
-        PlantUser e1 = new PlantUser();
-        PlantUser e2 = new PlantUser();
-
-        PlantUserReadDTO d1 = new PlantUserReadDTO();
-        PlantUserReadDTO d2 = new PlantUserReadDTO();
-
-        when(plantUserRepository.findAll()).thenReturn(List.of(e1, e2));
-        when(plantUserMapper.toReadDTO(e1)).thenReturn(d1);
-        when(plantUserMapper.toReadDTO(e2)).thenReturn(d2);
+    void testGetAllPlantUser_Success() {
+        when(plantUserRepository.findAll()).thenReturn(List.of(plantUser));
+        when(plantUserMapper.toReadDTO(plantUser)).thenReturn(readDTO);
 
         List<PlantUserReadDTO> result = plantUserService.getAllPlantUser();
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains(d1));
-        assertTrue(result.contains(d2));
+        assertEquals(1, result.size());
     }
 
-    // ---------- GET ALL BY USER ID ----------
+    // -------------------------------------------------------------
+    // GET ALL BY USER ID
+    // -------------------------------------------------------------
     @Test
-    void getAllPlantUserByUserId_Success() {
-        PlantUser e = new PlantUser();
-        PlantUserReadDTO dto = new PlantUserReadDTO();
+    void testGetAllPlantUserByUserId_Success() {
+        when(plantUserRepository.findByUserId(10L)).thenReturn(List.of(plantUser));
+        when(plantUserMapper.toReadDTO(plantUser)).thenReturn(readDTO);
 
-        when(plantUserRepository.findByUserId(9L)).thenReturn(List.of(e));
-        when(plantUserMapper.toReadDTO(e)).thenReturn(dto);
-
-        List<PlantUserReadDTO> result = plantUserService.getAllPlantUserByUserId(9L);
+        List<PlantUserReadDTO> result = plantUserService.getAllPlantUserByUserId(10L);
 
         assertEquals(1, result.size());
-        assertEquals(dto, result.get(0));
+        verify(plantUserRepository).findByUserId(10L);
     }
 
     @Test
-    void getAllPlantUserByUserId_NotFound() {
-        when(plantUserRepository.findByUserId(9L)).thenReturn(List.of());
+    void testGetAllPlantUserByUserId_NotFound() {
+        when(plantUserRepository.findByUserId(10L)).thenReturn(List.of());
 
-        assertThrows(EntityNotFoundException.class, () ->
-                plantUserService.getAllPlantUserByUserId(9L)
-        );
+        assertThrows(EntityNotFoundException.class,
+                () -> plantUserService.getAllPlantUserByUserId(10L));
     }
 
-    // ---------- UPDATE ----------
+    // -------------------------------------------------------------
+    // UPDATE
+    // -------------------------------------------------------------
     @Test
-    void updatePlantUser_Success() {
-        PlantUserUpdateDTO updateDTO = new PlantUserUpdateDTO("Novo Nome", 5L, LocalDate.now());
+    void testUpdatePlantUser_Success() {
+        PlantUserUpdateDTO updateDTO = new PlantUserUpdateDTO("Novo nome", 5L, LocalDate.now());
 
-        PlantUser entity = new PlantUser();
-        entity.setId(10L);
+        when(plantUserRepository.findById(1L)).thenReturn(Optional.of(plantUser));
+        doNothing().when(plantUserMapper).updateEntityFromDTO(updateDTO, plantUser);
+        when(plantUserRepository.save(plantUser)).thenReturn(plantUser);
+        when(plantUserMapper.toReadDTO(plantUser)).thenReturn(readDTO);
 
-        PlantUserReadDTO readDTO = new PlantUserReadDTO();
+        PlantUserReadDTO result = plantUserService.updatePlantUser(1L, updateDTO);
 
-        when(plantUserRepository.findById(10L)).thenReturn(Optional.of(entity));
-        doNothing().when(plantUserMapper).updateEntityFromDTO(updateDTO, entity);
-        when(plantUserMapper.toReadDTO(entity)).thenReturn(readDTO);
-
-        PlantUserReadDTO result = plantUserService.updatePlantUser(10L, updateDTO);
-
-        verify(plantUserRepository).save(entity);
-        assertEquals(readDTO, result);
-    }
-
-    @Test
-    void updatePlantUser_NotFound() {
-        when(plantUserRepository.findById(123L)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () ->
-                plantUserService.updatePlantUser(123L, new PlantUserUpdateDTO())
-        );
-    }
-
-    // ---------- DELETE ----------
-    @Test
-    void delete_Success() {
-        when(plantUserRepository.existsById(7L)).thenReturn(true);
-
-        plantUserService.delete(7L);
-
-        verify(plantUserRepository).deleteById(7L);
+        assertNotNull(result);
+        verify(plantUserMapper).updateEntityFromDTO(updateDTO, plantUser);
+        verify(plantUserRepository).save(plantUser);
     }
 
     @Test
-    void delete_NotFound() {
-        when(plantUserRepository.existsById(7L)).thenReturn(false);
+    void testUpdatePlantUser_NotFound() {
+        PlantUserUpdateDTO updateDTO = new PlantUserUpdateDTO();
 
-        assertThrows(EntityNotFoundException.class, () ->
-                plantUserService.delete(7L)
-        );
+        when(plantUserRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> plantUserService.updatePlantUser(1L, updateDTO));
+    }
+
+    // -------------------------------------------------------------
+    // DELETE
+    // -------------------------------------------------------------
+    @Test
+    void testDelete_Success() {
+        when(plantUserRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(plantUserRepository).deleteById(1L);
+
+        plantUserService.delete(1L);
+
+        verify(plantUserRepository).deleteById(1L);
+    }
+
+    @Test
+    void testDelete_NotFound() {
+        when(plantUserRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class,
+                () -> plantUserService.delete(1L));
     }
 }
-

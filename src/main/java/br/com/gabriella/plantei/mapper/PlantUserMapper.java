@@ -21,7 +21,6 @@ public interface PlantUserMapper {
   PlantUser toEntity(PlantUserCreateDTO dto);
 
   // ENTITY → READ DTO
-  @Mapping(target = "plantId", source = "plant.id")
   @Mapping(target = "userId", source = "user.id")
   @Mapping(target = "gardenId", source = "garden.id")
   PlantUserReadDTO toReadDTO(PlantUser entity);

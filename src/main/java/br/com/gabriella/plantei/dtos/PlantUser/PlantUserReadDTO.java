@@ -1,6 +1,8 @@
 package br.com.gabriella.plantei.dtos.PlantUser;
 
 import java.time.LocalDate;
+
+import br.com.gabriella.plantei.model.Plant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class PlantUserReadDTO {
   private Long id;
   private String nickname;
-  private Long plantId;
+  private Plant plant;
   private Long userId;
   private Long gardenId;
   private LocalDate acquisitionDate;

@@ -7,6 +7,7 @@ import br.com.gabriella.plantei.dtos.PlantUser.PlantUserReadDTO;
 import br.com.gabriella.plantei.mapper.GardenMapper;
 import br.com.gabriella.plantei.mapper.PlantUserMapper;
 import br.com.gabriella.plantei.model.Garden;
+import br.com.gabriella.plantei.model.Plant;
 import br.com.gabriella.plantei.model.PlantUser;
 import br.com.gabriella.plantei.repository.GardenRepository;
 import br.com.gabriella.plantei.repository.PlantUserRepository;
@@ -20,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +65,7 @@ public class GardenServiceTest {
         );
     }
 
-    // ----------------------------------------------------------------------
+    // CREATE ----------------------------------------------------------------------
 
     @Test
     void testCreateGarden() {
@@ -79,7 +81,7 @@ public class GardenServiceTest {
         verify(gardenRepository).save(garden);
     }
 
-    // ----------------------------------------------------------------------
+    // GET BY ID -------------------------------------------------------------------
 
     @Test
     void testGetGardenById() {
@@ -96,18 +98,36 @@ public class GardenServiceTest {
     void testGetGardenById_NotFound() {
         when(gardenRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> gardenService.getGardenById(99L));
+        assertThrows(EntityNotFoundException.class,
+                () -> gardenService.getGardenById(99L));
     }
 
-    // ----------------------------------------------------------------------
+    // GET PLANT USERS BY GARDEN ---------------------------------------------------
 
     @Test
     void testGetPlantUsersByGarden() {
+
+        // Plant
+        Plant plant = new Plant();
+        plant.setId(2L);
+
+        // PlantUser
         PlantUser plantUser = new PlantUser();
         plantUser.setId(1L);
+        plantUser.setNickname("nick");
+        plantUser.setPlant(plant);
+        plantUser.setGarden(garden);
+        plantUser.setUser(null);
+        plantUser.setAcquisitionDate(LocalDate.now());
 
+        // DTO correto
         PlantUserReadDTO plantUserDTO = new PlantUserReadDTO(
-                1L, "nick", 2L, 3L, 1L, null
+                plantUser.getId(),
+                plantUser.getNickname(),
+                plantUser.getPlant(),
+                null,
+                plantUser.getGarden().getId(),
+                plantUser.getAcquisitionDate()
         );
 
         when(plantUserRepository.findByGardenId(1L))
@@ -119,10 +139,13 @@ public class GardenServiceTest {
         List<PlantUserReadDTO> result = gardenService.getPlantUsersByGarden(1L);
 
         assertEquals(1, result.size());
+        assertEquals(1L, result.get(0).getGardenId());
+        assertEquals("nick", result.get(0).getNickname());
+
         verify(plantUserRepository).findByGardenId(1L);
     }
 
-    // ----------------------------------------------------------------------
+    // GET ALL GARDENS -------------------------------------------------------------
 
     @Test
     void testGetAllGardens() {
@@ -134,7 +157,7 @@ public class GardenServiceTest {
         assertEquals(1, list.size());
     }
 
-    // ----------------------------------------------------------------------
+    // UPDATE ----------------------------------------------------------------------
 
     @Test
     void testUpdateGarden() {
@@ -142,16 +165,20 @@ public class GardenServiceTest {
 
         when(gardenRepository.findById(1L)).thenReturn(Optional.of(garden));
 
-        // updateEntityFromDTO é void → só verifica se foi chamado
         doAnswer(invocation -> {
             garden.setName("Nome Atualizado");
             return null;
-        }).when(gardenMapper).updateEntityFromDTO(eq(updateDTO), eq(garden));
+        }).when(gardenMapper).updateEntityFromDTO(updateDTO, garden);
+
+        GardenReadDTO updatedDTO = new GardenReadDTO(
+                1L,
+                "Nome Atualizado",
+                10L,
+                garden.getCreatedAt()
+        );
 
         when(gardenRepository.save(garden)).thenReturn(garden);
-        when(gardenMapper.toReadDTO(garden)).thenReturn(
-                new GardenReadDTO(1L, "Nome Atualizado", 10L, garden.getCreatedAt())
-        );
+        when(gardenMapper.toReadDTO(garden)).thenReturn(updatedDTO);
 
         GardenReadDTO result = gardenService.updateGarden(1L, updateDTO);
 
@@ -167,7 +194,7 @@ public class GardenServiceTest {
                 () -> gardenService.updateGarden(999L, new GardenUpdateDTO("x")));
     }
 
-    // ----------------------------------------------------------------------
+    // DELETE ----------------------------------------------------------------------
 
     @Test
     void testDeleteGarden() {
