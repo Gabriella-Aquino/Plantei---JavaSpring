@@ -2,7 +2,7 @@ package br.com.gabriella.plantei.dtos.PlantUser;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlantUserCreateDTO {
-  @NotBlank private Long plantId;
+  @NotNull private Long plantId;
   private String nickname;
-  @NotBlank private Long userId;
-  @NotBlank private Long gardenId;
-  @NotBlank private LocalDate acquisitionDate;
+  @NotNull private Long userId;
+  @NotNull private Long gardenId;
+  @NotNull private LocalDate acquisitionDate;
 }
