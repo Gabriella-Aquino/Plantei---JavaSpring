@@ -9,6 +9,7 @@ import br.com.gabriella.plantei.model.PlantUser;
 
 public interface PlantUserRepository extends JpaRepository<PlantUser, Long>{
     List<PlantUser> findByUserId(Long userId);
+    List<PlantUser> findByGardenId(Long gardenId);
     List<Plant> findByNicknameContaining(String nickname);
 }
 

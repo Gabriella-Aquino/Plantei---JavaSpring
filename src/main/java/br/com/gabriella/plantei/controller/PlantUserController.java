@@ -39,12 +39,12 @@ public class PlantUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<PlantUserReadDTO> updatePlantUser(@PathVariable long id, @RequestBody PlantUserUpdateDTO data){
         return ResponseEntity.ok(plantUserService.updatePlantUser(id, data));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlantUser(@PathVariable long id){
         plantUserService.delete(id);
         return ResponseEntity.noContent().build();
