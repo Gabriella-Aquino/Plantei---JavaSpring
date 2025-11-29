@@ -5,15 +5,15 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version> 
-		<relativePath/> 
+		<version>3.2.0</version>
+		<relativePath/>
 	</parent>
 	<groupId>br.com.gabriella</groupId>
 	<artifactId>plantei</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>plantei</name>
 	<description>Demo project for Spring Boot</description>
-	
+
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -82,7 +82,28 @@
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
 		</dependency>
-		
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.15.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 	<build>
@@ -110,7 +131,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
