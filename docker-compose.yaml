@@ -8,3 +8,31 @@ services:
       POSTGRES_PASSWORD: mysecret
     ports:
       - "5432:5432"
+    networks:
+      - banco-plantei-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: plantei-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://plantei_db:5432/plantei_db
+      SPRING_DATASOURCE_USERNAME: plantei_admin
+      SPRING_DATASOURCE_PASSWORD: mysecret
+      SERVER_URL: http://localhost:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - banco-plantei-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  banco-plantei-network:
+    driver: bridge
