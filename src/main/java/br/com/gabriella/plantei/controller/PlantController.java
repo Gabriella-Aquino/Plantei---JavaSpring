@@ -3,6 +3,7 @@ package br.com.gabriella.plantei.controller;
 import br.com.gabriella.plantei.dtos.Plant.PlantCreateDTO;
 import br.com.gabriella.plantei.dtos.Plant.PlantReadDTO;
 import br.com.gabriella.plantei.dtos.Plant.PlantUpdateDTO;
+import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import br.com.gabriella.plantei.service.PlantService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

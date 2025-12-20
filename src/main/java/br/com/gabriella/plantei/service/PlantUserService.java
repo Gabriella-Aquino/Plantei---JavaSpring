@@ -3,10 +3,10 @@ package br.com.gabriella.plantei.service;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserCreateDTO;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserReadDTO;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserUpdateDTO;
+import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import br.com.gabriella.plantei.mapper.PlantUserMapper;
 import br.com.gabriella.plantei.model.PlantUser;
 import br.com.gabriella.plantei.repository.PlantUserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class PlantUserService {
     }
 
     public PlantUserReadDTO getPlantUserById(long id){
-        PlantUser plantUser = plantUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(("planta do usuario não encontrada")));
+        PlantUser plantUser = plantUserRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(("planta do usuario não encontrada")));
         return plantUserMapper.toReadDTO(plantUser);
     }
 
@@ -39,7 +39,7 @@ public class PlantUserService {
         List<PlantUser> list = plantUserRepository.findByUserId(userId);
 
         if (list.isEmpty()) {
-            throw new EntityNotFoundException("Nenhuma planta encontrada para este usuário");
+            throw new ResourceNotFoundException("Nenhuma planta encontrada para este usuário");
         }
 
         return list.stream()
@@ -49,7 +49,7 @@ public class PlantUserService {
 
     public PlantUserReadDTO updatePlantUser(long id, PlantUserUpdateDTO data){
         PlantUser plantUser = plantUserRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("planta do usuário não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("planta do usuário não encontrada"));
 
         plantUserMapper.updateEntityFromDTO(data, plantUser);
 
@@ -59,7 +59,7 @@ public class PlantUserService {
 
     public void delete(long id){
         if(!plantUserRepository.existsById(id)){
-            throw new EntityNotFoundException("Planta do usuario não encontrada");
+            throw new ResourceNotFoundException("Planta do usuario não encontrada");
         }
         plantUserRepository.deleteById(id);
     }

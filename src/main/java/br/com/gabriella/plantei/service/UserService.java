@@ -3,6 +3,8 @@ package br.com.gabriella.plantei.service;
 import br.com.gabriella.plantei.dtos.User.UserCreateDTO;
 import br.com.gabriella.plantei.dtos.User.UserReadDTO;
 import br.com.gabriella.plantei.dtos.User.UserUpdateDTO;
+import br.com.gabriella.plantei.exception.BusinessException;
+import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import br.com.gabriella.plantei.mapper.UserMapper;
 import br.com.gabriella.plantei.model.User;
 import br.com.gabriella.plantei.repository.UserRepository;
@@ -27,12 +29,12 @@ public class UserService {
             userRepository.save(user);
             return userMapper.toReadDTO(user);
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Username ou email já está sendo usado");
+            throw new BusinessException("Username ou email já está sendo usado");
         }
     }
 
     public UserReadDTO getUserById(long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User não encontrado"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User não encontrado"));
         return userMapper.toReadDTO(user);
     }
 
@@ -43,7 +45,7 @@ public class UserService {
     public UserReadDTO updateUser(Long id, UserUpdateDTO data){
         try {
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("User não encontrado"));
+                    .orElseThrow(() -> new ResourceNotFoundException("User não encontrado"));
             userMapper.updateEntityFromDTO(data, user);
             User update = userRepository.save(user);
             return userMapper.toReadDTO(update);
@@ -54,7 +56,7 @@ public class UserService {
 
     public void delete(long id){
         if(!userRepository.existsById(id)){
-            throw new EntityNotFoundException("user não encontrado");
+            throw new ResourceNotFoundException("user não encontrado");
         }
         userRepository.deleteById(id);
     }

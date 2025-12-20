@@ -1,7 +1,7 @@
 package br.com.gabriella.plantei.service;
 
 import br.com.gabriella.plantei.dtos.Plant.PlantUpdateDTO;
-import jakarta.persistence.EntityNotFoundException;
+import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class PlantService {
   }
 
   public  PlantReadDTO getPlantById(long id){
-      Plant plant = plantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Planta não encontrada"));
+      Plant plant = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Planta não encontrada"));
       return plantMapper.toReadDTO(plant);
   }
 
@@ -37,7 +37,7 @@ public class PlantService {
   }
 
   public PlantReadDTO updatePlant(long id, PlantUpdateDTO data){
-      Plant plant = plantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Planta não encontrada"));
+      Plant plant = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Planta não encontrada"));
       plantMapper.updateEntityFromDTO(data, plant);
       Plant update =plantRepository.save(plant);
       return plantMapper.toReadDTO(update);
@@ -45,7 +45,7 @@ public class PlantService {
 
   public void delete(long id){
       if(!plantRepository.existsById(id)){
-          throw new EntityNotFoundException("Plant não encontrada");
+          throw new ResourceNotFoundException("Plant não encontrada");
       }
       plantRepository.deleteById(id);
   }
