@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GardenMemberCreateDTO {
   @NotBlank
-  private Long gardenId;
-  @NotBlank
   private Long userId;
   private LocalDate entryDate;
 }

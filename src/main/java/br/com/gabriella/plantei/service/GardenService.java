@@ -3,9 +3,11 @@ package br.com.gabriella.plantei.service;
 import br.com.gabriella.plantei.dtos.Garden.GardenCreateDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenReadDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenUpdateDTO;
+import br.com.gabriella.plantei.dtos.GardenMember.GardenMemberReadDTO;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserReadDTO;
 import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import br.com.gabriella.plantei.mapper.GardenMapper;
+import br.com.gabriella.plantei.mapper.GardenMemberMapper;
 import br.com.gabriella.plantei.mapper.PlantUserMapper;
 import br.com.gabriella.plantei.model.Garden;
 import br.com.gabriella.plantei.model.PlantUser;
@@ -26,6 +28,8 @@ public class GardenService {
 
     @Autowired
     private GardenMapper gardenMapper;
+    @Autowired
+    private GardenMemberMapper gardenMemberMapper;
 
     @Autowired
     private PlantUserMapper plantUserMapper;
@@ -38,7 +42,16 @@ public class GardenService {
 
     public GardenReadDTO getGardenById(Long id) {
         Garden garden = gardenRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("jardim não encontrado"));
-        return gardenMapper.toReadDTO(garden);
+        GardenReadDTO dto = gardenMapper.toReadDTO(garden);
+
+        List<GardenMemberReadDTO> members = garden.getMembers()
+                .stream()
+                .map(gardenMemberMapper::toReadDTO)
+                .toList();
+
+        dto.setMembers(members);
+
+        return dto;
     }
 
     public List<PlantUserReadDTO> getPlantUsersByGarden(Long gardenId) {

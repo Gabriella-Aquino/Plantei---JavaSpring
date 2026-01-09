@@ -27,6 +27,7 @@ public interface GardenMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "admin", ignore = true) // Admin não é atualizado no PATCH
+  @Mapping(target = "members", ignore = true)
   @Mapping(target = "createdAt", ignore = true) // Nunca atualizado
   void updateEntityFromDTO(GardenUpdateDTO dto, @MappingTarget Garden garden);
 }

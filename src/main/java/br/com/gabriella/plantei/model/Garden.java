@@ -26,6 +26,9 @@ public class Garden {
   @OneToMany(mappedBy = "garden")
   private List<PlantUser> plantUsers;
 
+  @OneToMany(mappedBy = "garden", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<GardenMember> members;
+
   @CreationTimestamp 
   @Column(name = "created_at" ,updatable = false)
   private LocalDateTime createdAt;

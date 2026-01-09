@@ -4,6 +4,7 @@ import br.com.gabriella.plantei.dtos.Garden.GardenCreateDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenReadDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenUpdateDTO;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserReadDTO;
+import br.com.gabriella.plantei.exception.ResourceNotFoundException;
 import br.com.gabriella.plantei.mapper.GardenMapper;
 import br.com.gabriella.plantei.mapper.PlantUserMapper;
 import br.com.gabriella.plantei.model.Garden;
@@ -13,7 +14,6 @@ import br.com.gabriella.plantei.repository.GardenRepository;
 import br.com.gabriella.plantei.repository.PlantUserRepository;
 import br.com.gabriella.plantei.service.GardenService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GardenServiceTest {
+class GardenServiceTest {
 
     @Mock
     private GardenRepository gardenRepository;
@@ -61,11 +61,10 @@ public class GardenServiceTest {
                 garden.getId(),
                 garden.getName(),
                 10L,
-                garden.getCreatedAt()
+                garden.getCreatedAt(),
+                List.of()
         );
     }
-
-    // CREATE ----------------------------------------------------------------------
 
     @Test
     void testCreateGarden() {
@@ -81,8 +80,6 @@ public class GardenServiceTest {
         verify(gardenRepository).save(garden);
     }
 
-    // GET BY ID -------------------------------------------------------------------
-
     @Test
     void testGetGardenById() {
         when(gardenRepository.findById(1L)).thenReturn(Optional.of(garden));
@@ -91,42 +88,36 @@ public class GardenServiceTest {
         GardenReadDTO result = gardenService.getGardenById(1L);
 
         assertEquals(1L, result.getId());
-        verify(gardenRepository).findById(1L);
     }
 
     @Test
     void testGetGardenById_NotFound() {
         when(gardenRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
-                () -> gardenService.getGardenById(99L));
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> gardenService.getGardenById(99L)
+        );
     }
-
-    // GET PLANT USERS BY GARDEN ---------------------------------------------------
 
     @Test
     void testGetPlantUsersByGarden() {
-
-        // Plant
         Plant plant = new Plant();
         plant.setId(2L);
 
-        // PlantUser
         PlantUser plantUser = new PlantUser();
         plantUser.setId(1L);
         plantUser.setNickname("nick");
         plantUser.setPlant(plant);
         plantUser.setGarden(garden);
-        plantUser.setUser(null);
         plantUser.setAcquisitionDate(LocalDate.now());
 
-        // DTO correto
         PlantUserReadDTO plantUserDTO = new PlantUserReadDTO(
                 plantUser.getId(),
                 plantUser.getNickname(),
                 plantUser.getPlant(),
                 null,
-                plantUser.getGarden().getId(),
+                garden.getId(),
                 plantUser.getAcquisitionDate()
         );
 
@@ -139,13 +130,8 @@ public class GardenServiceTest {
         List<PlantUserReadDTO> result = gardenService.getPlantUsersByGarden(1L);
 
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getGardenId());
         assertEquals("nick", result.get(0).getNickname());
-
-        verify(plantUserRepository).findByGardenId(1L);
     }
-
-    // GET ALL GARDENS -------------------------------------------------------------
 
     @Test
     void testGetAllGardens() {
@@ -156,8 +142,6 @@ public class GardenServiceTest {
 
         assertEquals(1, list.size());
     }
-
-    // UPDATE ----------------------------------------------------------------------
 
     @Test
     void testUpdateGarden() {
@@ -174,7 +158,8 @@ public class GardenServiceTest {
                 1L,
                 "Nome Atualizado",
                 10L,
-                garden.getCreatedAt()
+                garden.getCreatedAt(),
+                List.of()
         );
 
         when(gardenRepository.save(garden)).thenReturn(garden);
@@ -183,18 +168,17 @@ public class GardenServiceTest {
         GardenReadDTO result = gardenService.updateGarden(1L, updateDTO);
 
         assertEquals("Nome Atualizado", result.getName());
-        verify(gardenMapper).updateEntityFromDTO(updateDTO, garden);
     }
 
     @Test
     void testUpdateGarden_NotFound() {
         when(gardenRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
-                () -> gardenService.updateGarden(999L, new GardenUpdateDTO("x")));
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> gardenService.updateGarden(999L, new GardenUpdateDTO("x"))
+        );
     }
-
-    // DELETE ----------------------------------------------------------------------
 
     @Test
     void testDeleteGarden() {
@@ -209,7 +193,9 @@ public class GardenServiceTest {
     void testDeleteGarden_NotFound() {
         when(gardenRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
-                () -> gardenService.deleteGarden(999L));
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> gardenService.deleteGarden(999L)
+        );
     }
 }

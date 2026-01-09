@@ -12,7 +12,6 @@ public interface GardenMemberMapper {
   // CREATE DTO → ENTITY
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "entryDate", ignore = true) // CreationTimestamp controla isso
-  @Mapping(target = "garden.id", source = "gardenId")
   @Mapping(target = "user.id", source = "userId")
   GardenMember toEntity(GardenMemberCreateDTO dto);
 

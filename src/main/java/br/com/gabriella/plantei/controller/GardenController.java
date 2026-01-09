@@ -3,7 +3,10 @@ package br.com.gabriella.plantei.controller;
 import br.com.gabriella.plantei.dtos.Garden.GardenCreateDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenReadDTO;
 import br.com.gabriella.plantei.dtos.Garden.GardenUpdateDTO;
+import br.com.gabriella.plantei.dtos.GardenMember.GardenMemberCreateDTO;
+import br.com.gabriella.plantei.dtos.GardenMember.GardenMemberReadDTO;
 import br.com.gabriella.plantei.dtos.PlantUser.PlantUserReadDTO;
+import br.com.gabriella.plantei.service.GardenMemberService;
 import br.com.gabriella.plantei.service.GardenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +24,9 @@ import java.util.List;
 public class GardenController {
     @Autowired
     private GardenService gardenService;
+
+    @Autowired
+    private GardenMemberService gardenMemberService;
 
     @Operation(summary = "Listar todos os jardins")
     @GetMapping
@@ -59,6 +65,28 @@ public class GardenController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGarden(@PathVariable Long id) {
         gardenService.deleteGarden(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //GardenMember
+
+    @PostMapping("/{id}/members")
+    public ResponseEntity<GardenMemberReadDTO> addMember(
+            @PathVariable Long id,
+            @RequestBody GardenMemberCreateDTO dto
+    ) {
+        GardenMemberReadDTO created =
+                gardenMemberService.createGardenMember(id, dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @DeleteMapping("/{id}/members/{userId}")
+    public ResponseEntity<Void> removeMember(
+            @PathVariable Long id,
+            @PathVariable Long userId
+    ) {
+        gardenMemberService.removeMember(id, userId);
         return ResponseEntity.noContent().build();
     }
 
